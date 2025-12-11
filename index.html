@@ -2,8 +2,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>나만의 하우스 견적 만들기</title>
+  <title>DSmodular | 모듈하우스 견적 만들기</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="DSmodular 모듈하우스의 사이즈·외장·내부 옵션을 선택하여 예상 견적을 확인해 보세요.">
   <style>
     * { box-sizing: border-box; }
 
@@ -266,9 +267,8 @@
 
     <header class="hb-header">
       <div>
-        <!-- 👉 제목 / 설명은 여기서 바꿔 쓰세요 -->
-        <h1 class="hb-title">나만의 모듈 하우스 견적 만들기</h1>
-        <p class="hb-sub">사이즈 · 외장 · 내부 옵션을 선택하면 예상 견적이 자동 계산됩니다.</p>
+        <h1 class="hb-title">DSmodular 모듈하우스 견적 만들기</h1>
+        <p class="hb-sub">사이즈 · 외장 · 내부 옵션을 선택하면 DSmodular 기준 예상 견적이 자동 계산됩니다.</p>
       </div>
       <div class="hb-note">
         * 실제 설계 및 현장 상황에 따라<br />
@@ -387,7 +387,7 @@
 
         <!-- 이미지 -->
         <div class="hb-image-wrap">
-          <!-- 👉 이미지 주소는 나중에 전부 바꿔 넣으면 돼요 -->
+          <!-- 실제 이미지 생기면 URL만 교체하시면 됩니다 -->
           <img
             id="hb-image"
             src="https://via.placeholder.com/900x550?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80"
@@ -410,11 +410,10 @@
           </div>
 
           <div class="hb-buttons">
-            <!-- 이 버튼 동작은 나중에 원하는 링크/기능으로 바꾸면 됩니다 -->
             <button class="hb-btn" type="button" onclick="alert('이미지 저장 기능은 이후에 연결하세요.')">
               이미지로 저장
             </button>
-            <button class="hb-btn hb-btn-main" type="button" onclick="alert('상담 신청 폼 또는 카톡 링크로 연결하세요.')">
+            <button class="hb-btn hb-btn-main" type="button" onclick="alert('상담 신청 폼 또는 카카오톡 채널로 연결하세요.')">
               이 구성으로 상담 신청하기
             </button>
           </div>
@@ -429,15 +428,15 @@
 
   <script>
     (function () {
-      // 👉 여기에서 기본가/추가금액만 사업에 맞게 나중에 수정하면 됨
-      const BASE_PRICE = 15000000; // 8평 기본가 (원)
+      // 👉 DSmodular 기준 8평 기본가 (원) – 실제 금액으로 수정해서 사용하세요.
+      const BASE_PRICE = 15000000;
 
       const totalPriceEl = document.getElementById("hb-total-price");
       const summaryEl = document.getElementById("hb-summary");
       const imageEl = document.getElementById("hb-image");
       const imageCaptionEl = document.getElementById("hb-image-caption");
 
-      // 탭별 이미지(나중에 전부 교체 가능)
+      // 탭별 이미지 – 실제 사진 URL 생기면 여기만 교체
       const tabImages = {
         exterior: {
           src: "https://via.placeholder.com/900x550?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80",
