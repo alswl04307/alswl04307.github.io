@@ -7,8 +7,11 @@
   <style>
     * { box-sizing: border-box; }
 
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
+      padding: 0;
+      overflow: hidden;  /* 세로 스크롤 숨기기 */
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
       background: #f5f5f5;
       color: #222;
@@ -16,8 +19,12 @@
 
     .page-wrap {
       max-width: 1400px;
-      margin: 24px auto;
-      padding: 0 16px 40px;
+      height: 100vh;              /* 화면 전체 높이 */
+      margin: 0 auto;
+      padding: 16px 16px 16px;
+      display: grid;
+      grid-template-rows: auto 1fr;  /* 위: 헤더, 아래: 본문 */
+      box-sizing: border-box;
     }
 
     h1, h2, h3 { margin: 0; }
@@ -26,8 +33,8 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
       border-bottom: 1px solid #e5e5e5;
       gap: 8px;
     }
@@ -54,6 +61,8 @@
       display: grid;
       grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); /* 왼쪽 넓게(이미지), 오른쪽 좁게(옵션) */
       gap: 24px;
+      height: 100%;     /* 헤더 제외 전체 높이 */
+      min-height: 0;
     }
 
     /* 공통 패널 */
@@ -111,7 +120,8 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      min-height: 100%;
+      height: 100%;
+      min-height: 0;
     }
 
     .hb-tabs {
@@ -139,25 +149,28 @@
 
     .hb-image-wrap {
       position: relative;
-      padding: 14px;
+      padding: 0;
+      height: 100%;
+      min-height: 0;
     }
 
     .hb-image-wrap img {
       width: 100%;
+      height: 100%;      /* 남은 높이 꽉 채우기 */
       display: block;
       border-radius: 10px;
       border: 1px solid #eee;
       background: #f0f0f0;
       object-fit: cover;
-      height: calc(100vh - 160px); /* 화면 높이 기준으로 꽉 차게 */
-  max-height: none;            /* 최대 높이 제한 제거 */
     }
 
     .hb-image-caption {
-      margin-top: 6px;
+      position: absolute;
+      right: 12px;
+      bottom: 8px;
       font-size: 12px;
-      color: #999;
-      text-align: right;
+      color: #f5f5f5;
+      text-shadow: 0 0 3px rgba(0,0,0,.6);
     }
 
     /* 오른쪽: 옵션 + 견적 */
@@ -165,6 +178,8 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      height: 100%;
+      min-height: 0;
     }
 
     .hb-area-panel {
@@ -183,6 +198,8 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      flex: 1;
+      min-height: 0;
     }
 
     .hb-estimate-row {
@@ -256,18 +273,23 @@
     }
 
     .hb-footer-note {
-      margin-top: 20px;
+      margin-top: auto;
       font-size: 11px;
       color: #aaa;
       text-align: right;
     }
 
     @media (max-width: 768px) {
+      html, body {
+        overflow: auto;  /* 모바일에서는 스크롤 허용 */
+      }
       .page-wrap {
-        margin-top: 24px;
+        height: auto;
+        grid-template-rows: auto auto;
       }
       .hb-layout {
         grid-template-columns: 1fr;
+        height: auto;
       }
       .hb-header {
         flex-direction: column;
@@ -275,6 +297,17 @@
       }
       .hb-note {
         text-align: left;
+      }
+      .hb-image-card,
+      .hb-right-column {
+        height: auto;
+      }
+      .hb-image-wrap {
+        height: auto;
+      }
+      .hb-image-wrap img {
+        height: auto;
+        max-height: 320px;
       }
     }
   </style>
@@ -306,7 +339,7 @@
         <div class="hb-image-wrap">
           <img
             id="hb-image"
-            src="https://via.placeholder.com/900x550?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80"
+            src="https://via.placeholder.com/1200x800?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80"
             alt="미리보기 이미지"
           />
           <p class="hb-image-caption" id="hb-image-caption">외관 이미지 예시</p>
@@ -468,13 +501,13 @@
               이 구성으로 상담 신청하기
             </button>
           </div>
+
+          <p class="hb-footer-note">
+            ※ 위 견적은 참고용이며, 구조·자재·현장 여건에 따라 변동될 수 있습니다.
+          </p>
         </div>
       </section>
     </main>
-
-    <p class="hb-footer-note">
-      ※ 위 견적은 참고용이며, 구조·자재·현장 여건에 따라 변동될 수 있습니다.
-    </p>
   </div>
 
   <script>
@@ -489,19 +522,19 @@
 
       const tabImages = {
         exterior: {
-          src: "https://via.placeholder.com/900x550?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80",
+          src: "https://via.placeholder.com/1200x800?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80",
           caption: "외관 이미지 예시",
         },
         living: {
-          src: "https://via.placeholder.com/900x550?text=%EA%B1%B0%EC%8B%A4+%2F+%EC%B9%A8%EC%8B%A4+%EC%9D%B4%EB%AF%B8%EC%A7%80",
+          src: "https://via.placeholder.com/1200x800?text=%EA%B1%B0%EC%8B%A4+%2F+%EC%B9%A8%EC%8B%A4+%EC%9D%B4%EB%AF%B8%EC%A7%80",
           caption: "거실/침실 이미지 예시",
         },
         kitchen: {
-          src: "https://via.placeholder.com/900x550?text=%EC%A3%BC%EB%B0%A9+%EC%9D%B4%EB%AF%B8%EC%A7%80",
+          src: "https://via.placeholder.com/1200x800?text=%EC%A3%BC%EB%B0%A9+%EC%9D%B4%EB%AF%B8%EC%A7%80",
           caption: "주방 이미지 예시",
         },
         bath: {
-          src: "https://via.placeholder.com/900x550?text=%EC%9A%95%EC%8B%A4+%EC%9D%B4%EB%AF%B8%EC%A7%80",
+          src: "https://via.placeholder.com/1200x800?text=%EC%9A%95%EC%8B%A4+%EC%9D%B4%EB%AF%B8%EC%A7%80",
           caption: "욕실 이미지 예시",
         },
       };
@@ -533,8 +566,7 @@
 
         summaryEl.textContent =
           (sizeText || "사이즈 미선택") +
-          " 기준, " +
-          "선택 옵션 포함 예상가입니다" +
+          " 기준, 선택 옵션 포함 예상가입니다" +
           (summaryOptionsText ? " (" + optionNames.join(", ") + ")" : "");
       }
 
