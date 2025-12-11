@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>나만의 하우스 견적 만들기</title>
+  <title>나만의 모듈 하우스 견적 만들기</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     * { box-sizing: border-box; }
@@ -15,8 +15,8 @@
     }
 
     .page-wrap {
-      max-width: 1120px;
-      margin: 40px auto;
+      max-width: 1400px;
+      margin: 24px auto;
       padding: 0 16px 40px;
     }
 
@@ -52,11 +52,11 @@
 
     .hb-layout {
       display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); /* 왼쪽 넓게(이미지), 오른쪽 좁게(옵션) */
       gap: 24px;
     }
 
-    /* 옵션 패널 */
+    /* 공통 패널 */
     .hb-panel {
       background: #ffffff;
       border-radius: 12px;
@@ -103,12 +103,12 @@
       white-space: nowrap;
     }
 
-    /* 프리뷰 카드 */
-    .hb-preview-card {
+    /* 왼쪽: 이미지 카드 */
+    .hb-image-card {
       border-radius: 12px;
       border: 1px solid #eaeaea;
-      overflow: hidden;
       background: #ffffff;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       min-height: 100%;
@@ -149,7 +149,8 @@
       border: 1px solid #eee;
       background: #f0f0f0;
       object-fit: cover;
-      max-height: 340px;
+      height: calc(100vh - 160px); /* 화면 높이 기준으로 꽉 차게 */
+  max-height: none;            /* 최대 높이 제한 제거 */
     }
 
     .hb-image-caption {
@@ -159,9 +160,26 @@
       text-align: right;
     }
 
-    .hb-estimate {
-      padding: 14px 16px 16px;
-      border-top: 1px solid #f0f0f0;
+    /* 오른쪽: 옵션 + 견적 */
+    .hb-right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hb-area-panel {
+      display: none;
+    }
+
+    .hb-area-panel.active {
+      display: block;
+    }
+
+    .hb-estimate-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #eaeaea;
+      padding: 16px 18px 18px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -266,9 +284,8 @@
 
     <header class="hb-header">
       <div>
-        <!-- 👉 제목 / 설명은 여기서 바꿔 쓰세요 -->
         <h1 class="hb-title">나만의 모듈 하우스 견적 만들기</h1>
-        <p class="hb-sub">사이즈 · 외장 · 내부 옵션을 선택하면 예상 견적이 자동 계산됩니다.</p>
+        <p class="hb-sub">사이즈 · 외관 · 거실/침실 · 주방 · 욕실 옵션을 선택하면 예상 견적이 자동 계산됩니다.</p>
       </div>
       <div class="hb-note">
         * 실제 설계 및 현장 상황에 따라<br />
@@ -277,9 +294,28 @@
     </header>
 
     <main class="hb-layout">
-      <!-- 왼쪽 : 옵션 영역 -->
-      <section>
-        <!-- 사이즈 -->
+      <!-- 왼쪽: 탭 + 이미지 -->
+      <section class="hb-image-card">
+        <div class="hb-tabs">
+          <div class="hb-tab active" data-tab="exterior">외관</div>
+          <div class="hb-tab" data-tab="living">거실/침실</div>
+          <div class="hb-tab" data-tab="kitchen">주방</div>
+          <div class="hb-tab" data-tab="bath">욕실</div>
+        </div>
+
+        <div class="hb-image-wrap">
+          <img
+            id="hb-image"
+            src="https://via.placeholder.com/900x550?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80"
+            alt="미리보기 이미지"
+          />
+          <p class="hb-image-caption" id="hb-image-caption">외관 이미지 예시</p>
+        </div>
+      </section>
+
+      <!-- 오른쪽: 옵션 + 견적 -->
+      <section class="hb-right-column">
+        <!-- 공통 : 사이즈 -->
         <div class="hb-panel">
           <div class="hb-panel-title">사이즈 선택</div>
 
@@ -308,96 +344,111 @@
           </div>
         </div>
 
-        <!-- 외장 -->
-        <div class="hb-panel">
-          <div class="hb-panel-title">외장 마감</div>
+        <!-- 탭별 옵션 패널 -->
+        <div id="hb-area-panels">
+          <!-- 외관 옵션 -->
+          <div class="hb-panel hb-area-panel active" data-area="exterior">
+            <div class="hb-panel-title">외관 마감</div>
 
-          <div class="hb-option-row">
-            <label>
-              <input type="radio" name="exterior" value="세라믹 사이딩" data-price="0" checked />
-              세라믹 사이딩
-            </label>
-            <div class="hb-option-price">기본 포함</div>
+            <div class="hb-option-row">
+              <label>
+                <input type="radio" name="exterior" value="세라믹 사이딩" data-price="0" checked />
+                세라믹 사이딩
+              </label>
+              <div class="hb-option-price">기본 포함</div>
+            </div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="radio" name="exterior" value="징크 마감" data-price="2000000" />
+                징크 마감
+              </label>
+              <div class="hb-option-price">+ 2,000,000원</div>
+            </div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="radio" name="exterior" value="우드+징크 콤비" data-price="3500000" />
+                우드+징크 콤비
+              </label>
+              <div class="hb-option-price">+ 3,500,000원</div>
+            </div>
           </div>
 
-          <div class="hb-option-row">
-            <label>
-              <input type="radio" name="exterior" value="징크 마감" data-price="2000000" />
-              징크 마감
-            </label>
-            <div class="hb-option-price">+ 2,000,000원</div>
+          <!-- 거실/침실 옵션 -->
+          <div class="hb-panel hb-area-panel" data-area="living">
+            <div class="hb-panel-title">거실/침실 옵션</div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="checkbox" name="option" value="시스템 에어컨" data-price="1500000" />
+                시스템 에어컨
+              </label>
+              <div class="hb-option-price">+ 1,500,000원</div>
+            </div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="checkbox" name="option" value="포인트 도장" data-price="600000" />
+                포인트 도장
+              </label>
+              <div class="hb-option-price">+ 600,000원</div>
+            </div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="checkbox" name="option" value="붙박이장 패키지" data-price="1200000" />
+                붙박이장 패키지
+              </label>
+              <div class="hb-option-price">+ 1,200,000원</div>
+            </div>
           </div>
 
-          <div class="hb-option-row">
-            <label>
-              <input type="radio" name="exterior" value="우드+징크 콤비" data-price="3500000" />
-              우드+징크 콤비
-            </label>
-            <div class="hb-option-price">+ 3,500,000원</div>
+          <!-- 주방 옵션 -->
+          <div class="hb-panel hb-area-panel" data-area="kitchen">
+            <div class="hb-panel-title">주방 옵션</div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="checkbox" name="option" value="주방 업그레이드 패키지" data-price="2000000" />
+                주방 업그레이드 패키지
+              </label>
+              <div class="hb-option-price">+ 2,000,000원</div>
+            </div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="checkbox" name="option" value="식기세척기 포함" data-price="800000" />
+                식기세척기 포함
+              </label>
+              <div class="hb-option-price">+ 800,000원</div>
+            </div>
+          </div>
+
+          <!-- 욕실 옵션 -->
+          <div class="hb-panel hb-area-panel" data-area="bath">
+            <div class="hb-panel-title">욕실 옵션</div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="checkbox" name="option" value="욕실 풀옵션 업그레이드" data-price="1500000" />
+                욕실 풀옵션 업그레이드
+              </label>
+              <div class="hb-option-price">+ 1,500,000원</div>
+            </div>
+
+            <div class="hb-option-row">
+              <label>
+                <input type="checkbox" name="option" value="비데 포함" data-price="300000" />
+                비데 포함
+              </label>
+              <div class="hb-option-price">+ 300,000원</div>
+            </div>
           </div>
         </div>
 
-        <!-- 내부 옵션 -->
-        <div class="hb-panel">
-          <div class="hb-panel-title">내부 옵션</div>
-
-          <div class="hb-option-row">
-            <label>
-              <input type="checkbox" name="option" value="시스템 에어컨" data-price="1500000" />
-              시스템 에어컨
-            </label>
-            <div class="hb-option-price">+ 1,500,000원</div>
-          </div>
-
-          <div class="hb-option-row">
-            <label>
-              <input type="checkbox" name="option" value="포인트 도장" data-price="600000" />
-              포인트 도장
-            </label>
-            <div class="hb-option-price">+ 600,000원</div>
-          </div>
-
-          <div class="hb-option-row">
-            <label>
-              <input type="checkbox" name="option" value="주방 업그레이드" data-price="2000000" />
-              주방 업그레이드 패키지
-            </label>
-            <div class="hb-option-price">+ 2,000,000원</div>
-          </div>
-
-          <div class="hb-option-row">
-            <label>
-              <input type="checkbox" name="option" value="욕실 업그레이드" data-price="1500000" />
-              욕실 풀옵션 업그레이드
-            </label>
-            <div class="hb-option-price">+ 1,500,000원</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 오른쪽 : 이미지 + 견적 -->
-      <section class="hb-preview-card">
-        <!-- 탭 -->
-        <div class="hb-tabs">
-          <div class="hb-tab active" data-tab="exterior">외관</div>
-          <div class="hb-tab" data-tab="living">거실/침실</div>
-          <div class="hb-tab" data-tab="kitchen">주방</div>
-          <div class="hb-tab" data-tab="bath">욕실</div>
-        </div>
-
-        <!-- 이미지 -->
-        <div class="hb-image-wrap">
-          <!-- 👉 이미지 주소는 나중에 전부 바꿔 넣으면 돼요 -->
-          <img
-            id="hb-image"
-            src="https://via.placeholder.com/900x550?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80"
-            alt="미리보기 이미지"
-          />
-          <p class="hb-image-caption" id="hb-image-caption">외관 이미지 예시</p>
-        </div>
-
-        <!-- 견적 -->
-        <div class="hb-estimate">
+        <!-- 견적 카드 -->
+        <div class="hb-estimate-card">
           <div class="hb-estimate-row">
             <div class="hb-estimate-label">예상 견적가 (부가세 별도)</div>
             <div class="hb-estimate-price">
@@ -406,15 +457,14 @@
           </div>
 
           <div class="hb-summary" id="hb-summary">
-            8평 · 세라믹 사이딩 · 기본 내장 옵션 기준의 예상가입니다.
+            8평 · 세라믹 사이딩 · 선택 옵션 기준 예상가입니다.
           </div>
 
           <div class="hb-buttons">
-            <!-- 이 버튼 동작은 나중에 원하는 링크/기능으로 바꾸면 됩니다 -->
             <button class="hb-btn" type="button" onclick="alert('이미지 저장 기능은 이후에 연결하세요.')">
               이미지로 저장
             </button>
-            <button class="hb-btn hb-btn-main" type="button" onclick="alert('상담 신청 폼 또는 카톡 링크로 연결하세요.')">
+            <button class="hb-btn hb-btn-main" type="button" onclick="alert('상담 신청 폼 또는 카카오톡 링크로 연결하세요.')">
               이 구성으로 상담 신청하기
             </button>
           </div>
@@ -429,15 +479,14 @@
 
   <script>
     (function () {
-      // 👉 여기에서 기본가/추가금액만 사업에 맞게 나중에 수정하면 됨
-      const BASE_PRICE = 15000000; // 8평 기본가 (원)
+      // 8평 기본가 (원) – 실제 금액으로 맞춰서 사용
+      const BASE_PRICE = 15000000;
 
       const totalPriceEl = document.getElementById("hb-total-price");
       const summaryEl = document.getElementById("hb-summary");
       const imageEl = document.getElementById("hb-image");
       const imageCaptionEl = document.getElementById("hb-image-caption");
 
-      // 탭별 이미지(나중에 전부 교체 가능)
       const tabImages = {
         exterior: {
           src: "https://via.placeholder.com/900x550?text=%EC%99%B8%EA%B4%80+%EC%9D%B4%EB%AF%B8%EC%A7%80",
@@ -467,7 +516,10 @@
         const optionNames = [];
 
         if (size) total += Number(size.dataset.price || 0);
-        if (exterior) total += Number(exterior.dataset.price || 0);
+        if (exterior) {
+          total += Number(exterior.dataset.price || 0);
+          optionNames.push(exterior.value);
+        }
 
         checkedOptions.forEach((el) => {
           total += Number(el.dataset.price || 0);
@@ -477,29 +529,38 @@
         totalPriceEl.textContent = total.toLocaleString();
 
         const sizeText = size ? size.value : "";
-        const exteriorText = exterior ? exterior.value : "";
-        const optionsText = optionNames.length ? " · 옵션: " + optionNames.join(", ") : "";
+        const summaryOptionsText = optionNames.length ? " · 옵션: " + optionNames.join(", ") : "";
 
         summaryEl.textContent =
           (sizeText || "사이즈 미선택") +
-          " · " +
-          (exteriorText || "외장 미선택") +
-          optionsText +
-          " 기준 예상가입니다.";
+          " 기준, " +
+          "선택 옵션 포함 예상가입니다" +
+          (summaryOptionsText ? " (" + optionNames.join(", ") + ")" : "");
       }
 
       function initTabs() {
         const tabs = document.querySelectorAll(".hb-tab");
+        const areaPanels = document.querySelectorAll(".hb-area-panel");
+
         tabs.forEach((tab) => {
           tab.addEventListener("click", () => {
+            // 탭 활성화
             tabs.forEach((t) => t.classList.remove("active"));
             tab.classList.add("active");
+
             const key = tab.dataset.tab;
+
+            // 이미지 변경
             const img = tabImages[key];
             if (img) {
               imageEl.src = img.src;
               imageCaptionEl.textContent = img.caption;
             }
+
+            // 옵션 패널 표시 변경
+            areaPanels.forEach((panel) => {
+              panel.classList.toggle("active", panel.dataset.area === key);
+            });
           });
         });
       }
